@@ -7,6 +7,7 @@ import com.rcc.dev.backend.service.slider.iservice.SliderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -22,7 +23,11 @@ public class SliderServiceImpl implements SliderService {
         slider.setTitle(sliderRequest.getTitle());
         slider.setDescription(sliderRequest.getDescription());
         slider.setImgBase64(sliderRequest.getImgBase64());
-        return slider;
+        slider.setCreatedBy(1L);
+        slider.setCreatedDate(new Date());
+        slider.setUpdatedBy(1L);
+        slider.setUpdatedDate(new Date());
+        return sliderRepository.save(slider);
     }
 
     @Override
