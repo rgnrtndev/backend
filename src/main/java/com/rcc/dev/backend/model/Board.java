@@ -1,20 +1,23 @@
 package com.rcc.dev.backend.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Date;
 
-@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder
 @Entity
 @Table
-public class Board {
+public class Board extends BaseDomain implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 5176459258825566124L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,8 +27,4 @@ public class Board {
     private String phoneNumber;
     private Date startPeriod;
     private Date endPeriod;
-    private Date createdDate;
-    private Long createdBy;
-    private Date updatedDate;
-    private Long updatedBy;
 }

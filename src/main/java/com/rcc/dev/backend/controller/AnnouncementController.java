@@ -1,6 +1,7 @@
 package com.rcc.dev.backend.controller;
 
 import com.rcc.dev.backend.dto.announcement.AnnouncementRequest;
+import com.rcc.dev.backend.dto.response.RCCResponse;
 import com.rcc.dev.backend.model.Announcement;
 import com.rcc.dev.backend.service.announcement.iservice.AnnouncementService;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ public class AnnouncementController {
     private final AnnouncementService announcementService;
 
     @PostMapping("/save")
-    public Announcement update(@RequestBody AnnouncementRequest announcementRequest){
+    public RCCResponse<Object> update(@RequestBody AnnouncementRequest announcementRequest){
         return announcementService.update(announcementRequest);
     }
 }

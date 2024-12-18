@@ -1,26 +1,25 @@
 package com.rcc.dev.backend.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Date;
 
-@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder
 @Table
 @Entity
-public class Role {
+public class Role extends BaseDomain implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 5274786415032757673L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String roleName;
-    private Date createdDate;
-    private Long createdBy;
-    private Date updatedDate;
-    private Long updatedBy;
 }

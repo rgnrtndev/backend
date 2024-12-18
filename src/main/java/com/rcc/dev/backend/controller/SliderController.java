@@ -1,5 +1,6 @@
 package com.rcc.dev.backend.controller;
 
+import com.rcc.dev.backend.dto.response.RCCResponse;
 import com.rcc.dev.backend.dto.slider.SliderRequest;
 import com.rcc.dev.backend.model.Slider;
 import com.rcc.dev.backend.service.slider.iservice.SliderService;
@@ -17,12 +18,12 @@ public class SliderController {
     private SliderService sliderService;
 
     @PostMapping("/save")
-    public Slider saveSlider(@RequestBody SliderRequest sliderRequest){
+    public RCCResponse<Object> saveSlider(@RequestBody SliderRequest sliderRequest){
         return sliderService.saveSlider(sliderRequest);
     }
 
     @GetMapping("/list")
-    public List<Slider> listSlider(){
+    public RCCResponse<Object> listSlider(){
         return sliderService.getAllSlider();
     }
 }

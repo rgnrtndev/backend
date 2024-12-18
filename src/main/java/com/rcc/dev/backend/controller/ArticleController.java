@@ -1,6 +1,7 @@
 package com.rcc.dev.backend.controller;
 
 import com.rcc.dev.backend.dto.article.ArticleRequest;
+import com.rcc.dev.backend.dto.response.RCCResponse;
 import com.rcc.dev.backend.model.Article;
 import com.rcc.dev.backend.service.article.iservice.ArticleService;
 import lombok.RequiredArgsConstructor;
@@ -13,17 +14,17 @@ public class ArticleController {
     private final ArticleService articleService;
 
     @PostMapping("/save")
-    public Article save(@RequestBody ArticleRequest articleRequest){
+    public RCCResponse<Object> save(@RequestBody ArticleRequest articleRequest){
         return articleService.save(articleRequest);
     }
 
     @GetMapping("/detail/{id}")
-    public Article detail(@PathVariable("id") Long id){
+    public RCCResponse<Object> detail(@PathVariable("id") Long id){
         return articleService.getDetail(id);
     }
 
     @DeleteMapping("/delete/{id}")
-    public void delete(@PathVariable("id") Long id){
-        articleService.delete(id);
+    public RCCResponse<Object> delete(@PathVariable("id") Long id){
+        return articleService.delete(id);
     }
 }

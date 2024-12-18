@@ -1,6 +1,7 @@
 package com.rcc.dev.backend.controller;
 
 import com.rcc.dev.backend.dto.category.CategoryRequest;
+import com.rcc.dev.backend.dto.response.RCCResponse;
 import com.rcc.dev.backend.model.Category;
 import com.rcc.dev.backend.service.category.iservice.CategoryService;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,12 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @PostMapping("/save")
-    public Category save(@RequestBody CategoryRequest categoryRequest){
+    public RCCResponse<Object> save(@RequestBody CategoryRequest categoryRequest){
         return categoryService.save(categoryRequest);
+    }
+
+    @PostMapping("/list")
+    public RCCResponse<Object> list(){
+        return categoryService.findAll();
     }
 }

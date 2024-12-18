@@ -2,20 +2,25 @@ package com.rcc.dev.backend.model;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Date;
 
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder
 @Table
 @Entity
-public class Announcement {
+public class Announcement extends BaseDomain implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -2896333516764827211L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,12 +31,4 @@ public class Announcement {
 
     @Column(name = "gallery_id")
     private Long galleryId;
-
-    private Date createdDate;
-
-    private Long createdBy;
-
-    private Date updateDate;
-
-    private Long updatedBy;
 }

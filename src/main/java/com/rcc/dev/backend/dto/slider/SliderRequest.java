@@ -24,11 +24,7 @@ public class SliderRequest {
 
     private String description;
 
-    private String imgBase64;
-
-    private Long createdBy;
-
-    private Long updatedBy;
+    private Long galleryId;
 
     private Boolean isDeleted;
 }
