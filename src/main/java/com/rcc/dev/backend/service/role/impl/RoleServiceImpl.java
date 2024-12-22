@@ -9,6 +9,7 @@ import com.rcc.dev.backend.service.role.iservice.RoleService;
 import com.rcc.dev.backend.util.ResponseUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -64,6 +65,7 @@ public class RoleServiceImpl implements RoleService {
         }
     }
 
+    @Transactional
     @Override
     public RCCResponse<Object> save(RoleRequest roleRequest) {
         try{
@@ -87,6 +89,7 @@ public class RoleServiceImpl implements RoleService {
         }
     }
 
+    @Transactional
     @Override
     public RCCResponse<Object> delete(Long id) {
         try {

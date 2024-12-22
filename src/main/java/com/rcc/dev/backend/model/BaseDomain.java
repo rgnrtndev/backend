@@ -44,19 +44,12 @@ public class BaseDomain implements Serializable{
         if (null == this.createdDate){
             this.createdDate = new Date();
         }
-
-        if (null == this.createdBy){
-           this.createdBy = 0L;
-        }
     }
 
     @PreUpdate
     public void onUpdate(){
         if (null == this.modifiedDate){
             this.modifiedDate = new Date();
-        }
-        if (null == this.modifiedBy){
-            this.modifiedBy = 0L;
         }
     }
 }

@@ -23,6 +23,9 @@ public class Article extends BaseDomain implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(columnDefinition = "TEXT", nullable = true)
     private String description;
+
     private Long galleryId;
 }

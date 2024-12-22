@@ -2,13 +2,9 @@ package com.rcc.dev.backend.controller;
 
 import com.rcc.dev.backend.dto.announcement.AnnouncementRequest;
 import com.rcc.dev.backend.dto.response.RCCResponse;
-import com.rcc.dev.backend.model.Announcement;
 import com.rcc.dev.backend.service.announcement.iservice.AnnouncementService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/announcement")
@@ -19,5 +15,10 @@ public class AnnouncementController {
     @PostMapping("/save")
     public RCCResponse<Object> update(@RequestBody AnnouncementRequest announcementRequest){
         return announcementService.update(announcementRequest);
+    }
+
+    @GetMapping("/list")
+    public RCCResponse<Object> list() {
+        return announcementService.list();
     }
 }

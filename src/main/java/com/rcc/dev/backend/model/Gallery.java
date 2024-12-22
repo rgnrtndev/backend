@@ -24,7 +24,12 @@ public class Gallery extends BaseDomain implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
+
+    @Column(columnDefinition = "TEXT")
     private String imageBase64;
+
+    @Column(columnDefinition = "TEXT", nullable = true)
     private String description;
+
     private Long categoryId;
 }

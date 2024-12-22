@@ -1,5 +1,6 @@
 package com.rcc.dev.backend.dto.gallery;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,5 +15,6 @@ public class GalleryRequest {
     private String title;
     private String imageBase64;
     private String description;
+    @NotNull(message = "categoryId not null")
     private Long categoryId;
 }

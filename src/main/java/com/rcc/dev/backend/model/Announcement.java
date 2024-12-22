@@ -27,6 +27,7 @@ public class Announcement extends BaseDomain implements Serializable {
 
     private String title;
 
+    @Column(columnDefinition = "TEXT", nullable = true)
     private String description;
 
     @Column(name = "gallery_id")

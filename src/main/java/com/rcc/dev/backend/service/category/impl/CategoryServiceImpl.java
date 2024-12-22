@@ -9,8 +9,8 @@ import com.rcc.dev.backend.repository.CategoryRepository;
 import com.rcc.dev.backend.service.category.iservice.CategoryService;
 import com.rcc.dev.backend.util.ResponseUtil;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,6 +20,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
 
+    @Transactional
     @Override
     public RCCResponse<Object> save(CategoryRequest categoryRequest) {
         try {

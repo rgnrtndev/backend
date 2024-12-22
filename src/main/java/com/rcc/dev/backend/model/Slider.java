@@ -27,6 +27,7 @@ public class Slider extends BaseDomain implements Serializable {
 
     private String title;
 
+    @Column(columnDefinition = "TEXT", nullable = true)
     private String description;
 
     private Long galleryId;

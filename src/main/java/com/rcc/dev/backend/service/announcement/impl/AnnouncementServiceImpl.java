@@ -9,6 +9,7 @@ import com.rcc.dev.backend.service.announcement.iservice.AnnouncementService;
 import com.rcc.dev.backend.util.ResponseUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +21,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     @Override
     public RCCResponse<Object> list() {
         try {
-            var announcements = announcementRepository.findAll();
+            var announcements = announcementRepository.findAllSlider();
             return ResponseUtil.response(
                     ResponseCode.SUCCESS_RESPONSE_CODE,
                     ResponseCode.CommonIdn.SUCCESS_GET_ALL_DATA,
@@ -61,6 +62,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         }
     }
 
+    @Transactional
     @Override
     public RCCResponse<Object> update(AnnouncementRequest announcementRequest) {
         try {
@@ -86,6 +88,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         }
     }
 
+    @Transactional
     @Override
     public RCCResponse<Object> delete(Long id) {
         try {

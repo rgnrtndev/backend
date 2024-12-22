@@ -9,8 +9,7 @@ import com.rcc.dev.backend.service.article.iservice.ArticleService;
 import com.rcc.dev.backend.util.ResponseUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -37,11 +36,12 @@ public class ArticleServiceImpl implements ArticleService {
         }
     }
 
+    @Transactional
     @Override
     public RCCResponse<Object> save(ArticleRequest articleRequest) {
         try {
             Article article = Article.builder()
-                    .id(articleRequest.getId() == null || articleRequest.getId().equals(0L) ? null : articleRequest.getId())
+                    .id(articleRequest.getId() == null || articleRequest.getId().equals(0L) ? 1L : articleRequest.getId())
                     .description(articleRequest.getDescription())
                     .galleryId(articleRequest.getGalleryId())
                     .build();
@@ -86,15 +86,23 @@ public class ArticleServiceImpl implements ArticleService {
         }
     }
 
+    @Transactional
     @Override
     public RCCResponse<Object> delete(Long id) {
         try {
-            Article article = articleRepository.findById(id).get();
-            articleRepository.delete(article);
+            var article = articleRepository.findById(id);
+            if(article.isEmpty()){
+                return ResponseUtil.response(
+                        ResponseCode.SUCCESS_RESPONSE_CODE,
+                        ResponseCode.CommonIdn.DATA_NOT_FOUND,
+                        ResponseCode.CommonEng.DATA_NOT_FOUND
+                );
+            }
+            articleRepository.delete(article.get());
             return ResponseUtil.response(
                     ResponseCode.SUCCESS_RESPONSE_CODE,
-                    ResponseCode.CommonIdn.DATA_NOT_FOUND,
-                    ResponseCode.CommonEng.DATA_NOT_FOUND
+                    ResponseCode.CommonIdn.SUCCESS_DELETED_DATA,
+                    ResponseCode.CommonEng.SUCCESS_DELETED_DATA
             );
         }catch (Exception e){
             return ResponseUtil.response(

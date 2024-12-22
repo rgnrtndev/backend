@@ -13,6 +13,11 @@ import org.springframework.web.bind.annotation.*;
 public class ArticleController {
     private final ArticleService articleService;
 
+    @GetMapping("/list")
+    public RCCResponse<Object> list(){
+        return articleService.listArticle();
+    }
+
     @PostMapping("/save")
     public RCCResponse<Object> save(@RequestBody ArticleRequest articleRequest){
         return articleService.save(articleRequest);

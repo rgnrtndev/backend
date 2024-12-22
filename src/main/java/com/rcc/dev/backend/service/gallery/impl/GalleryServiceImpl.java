@@ -1,7 +1,6 @@
 package com.rcc.dev.backend.service.gallery.impl;
 
 import com.rcc.dev.backend.constant.ResponseCode;
-import com.rcc.dev.backend.constant.StatusResponse;
 import com.rcc.dev.backend.dto.gallery.GalleryRequest;
 import com.rcc.dev.backend.dto.response.RCCResponse;
 import com.rcc.dev.backend.model.Gallery;
@@ -10,6 +9,9 @@ import com.rcc.dev.backend.service.gallery.iservice.GalleryService;
 import com.rcc.dev.backend.util.ResponseUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -39,14 +41,22 @@ public class GalleryServiceImpl implements GalleryService {
     @Override
     public RCCResponse<Object> save(GalleryRequest galleryRequest) {
         try{
-            Gallery mapGallery = Gallery.builder()
+            Gallery gallery;
+            if(Objects.isNull(galleryRequest.getId()) || galleryRequest.getId().equals(0L)){
+                gallery = new Gallery();
+            }else {
+                gallery = galleryRepository.findById(galleryRequest.getId()).get();
+
+            }
+            gallery = Gallery.builder()
                     .id(galleryRequest.getId())
                     .title(galleryRequest.getTitle())
                     .description(galleryRequest.getDescription())
                     .imageBase64(galleryRequest.getImageBase64())
                     .categoryId(galleryRequest.getCategoryId())
+                    .createdDate(gallery.getCreatedDate())
                     .build();
-            Gallery savedGallery = galleryRepository.save(mapGallery);
+            Gallery savedGallery = galleryRepository.save(gallery);
             return ResponseUtil.response(
                     ResponseCode.SUCCESS_RESPONSE_CODE,
                     ResponseCode.CommonIdn.SUCCESS_SAVE_DATA,

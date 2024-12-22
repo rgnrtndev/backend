@@ -9,6 +9,7 @@ import com.rcc.dev.backend.service.board.iservice.BoardService;
 import com.rcc.dev.backend.util.ResponseUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -38,6 +39,7 @@ public class BoardServiceImpl implements BoardService {
         }
     }
 
+    @Transactional
     @Override
     public RCCResponse<Object> saved(BoardRequest boardRequest) {
         try {
@@ -91,6 +93,7 @@ public class BoardServiceImpl implements BoardService {
         }
     }
 
+    @Transactional
     @Override
     public RCCResponse<Object> delete(Long id) {
         try {

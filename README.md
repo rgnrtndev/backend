@@ -1,8 +1,17 @@
 # RCC Back End
-this is project for RCC Church
+This is project for RCC Church
+
+### running docker for redis
+- docker pull redis
+- docker run --name redis-container -d -p 6379:6379 -v redis-data:/data redis
+
+### running docker-compose
+- docker-compose up -d
 
 ## Updated
 - access project http://localhost:8081/rcc/swagger-ui/index.html
+
+
 
 ### 16 Dec 2024
 - add README.md
