@@ -25,7 +25,7 @@ public class BaseDomain implements Serializable{
 
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
-    @Column(name = "CREATED_DATE", nullable = false)
+    @Column(name = "CREATED_DATE", nullable = true)
     private Date createdDate;
 
     @Column(name = "CREATED_BY", nullable = true)

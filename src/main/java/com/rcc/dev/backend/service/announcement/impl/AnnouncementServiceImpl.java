@@ -6,22 +6,33 @@ import com.rcc.dev.backend.dto.response.RCCResponse;
 import com.rcc.dev.backend.model.Announcement;
 import com.rcc.dev.backend.repository.AnnouncementRepository;
 import com.rcc.dev.backend.service.announcement.iservice.AnnouncementService;
+import com.rcc.dev.backend.util.AuthenticationUtils;
+import com.rcc.dev.backend.util.CacheUtil;
 import com.rcc.dev.backend.util.ResponseUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 public class AnnouncementServiceImpl implements AnnouncementService {
 
+    private final CacheUtil cacheUtil;
     private final AnnouncementRepository announcementRepository;
-
+    private final AuthenticationUtils authenticationUtils;
 
     @Override
-    public RCCResponse<Object> list() {
+    public RCCResponse<Object> list(HttpServletRequest httpServletRequest) {
+        var userData = authenticationUtils.validateAuthentication(httpServletRequest);
         try {
+            if(Objects.isNull(userData)){
+                System.out.println("data not found : " + userData.getId());
+            }
             var announcements = announcementRepository.findAllSlider();
+
             return ResponseUtil.response(
                     ResponseCode.SUCCESS_RESPONSE_CODE,
                     ResponseCode.CommonIdn.SUCCESS_GET_ALL_DATA,
@@ -38,7 +49,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
     @Override
-    public RCCResponse<Object> detail(Long id) {
+    public RCCResponse<Object> detail(HttpServletRequest httpServletRequest, Long id) {
         try {
 
             var announcement = announcementRepository.findById(id);
@@ -64,7 +75,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
     @Transactional
     @Override
-    public RCCResponse<Object> update(AnnouncementRequest announcementRequest) {
+    public RCCResponse<Object> update(HttpServletRequest httpServletRequest, AnnouncementRequest announcementRequest) {
         try {
             Announcement mapAnnouncement = Announcement.builder()
                     .id(announcementRequest.getId())
@@ -90,7 +101,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
     @Transactional
     @Override
-    public RCCResponse<Object> delete(Long id) {
+    public RCCResponse<Object> delete(HttpServletRequest httpServletRequest, Long id) {
         try {
             var announcement = announcementRepository.findById(id);
             if(announcement.isEmpty()){

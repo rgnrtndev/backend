@@ -33,8 +33,10 @@ public class SliderServiceImpl implements SliderService {
             if(Objects.isNull(sliderRequest.getId()) || sliderRequest.getId().equals(0L)){
                 slider = new Slider();
             }else{
-                slider = sliderRepository.findById(sliderRequest.getId()).get();
+                var slide = sliderRepository.findById(sliderRequest.getId());
+                slider = slide.orElse(null);
             }
+            assert slider != null;
             slider.setId(sliderRequest.getId());
             slider.setTitle(sliderRequest.getTitle());
             slider.setDescription(sliderRequest.getDescription());

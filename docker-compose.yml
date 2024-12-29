@@ -12,26 +12,57 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data # Volume untuk persistensi data
 
-  zookeeper:
-    image: confluentinc/cp-zookeeper:7.5.0
-    container_name: zookeeper
-    ports:
-      - "2181:2181"
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
+#  zookeeper:
+#    image: confluentinc/cp-zookeeper:7.5.0
+#    container_name: zookeeper
+#    ports:
+#      - "2181:2181"
+#    environment:
+#      ZOOKEEPER_CLIENT_PORT: 2181
+#      ZOOKEEPER_TICK_TIME: 2000
 
-  kafka:
-    image: confluentinc/cp-kafka:7.5.0
-    container_name: kafka
+  mongodb:
+    image: mongo
+    container_name: mongo_db_rcc
     ports:
-      - "9092:9092"
+      - 27017:27017
+    volumes:
+      - mongo:/data
     environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      - MONGO_INITDB_ROOT_USERNAME=rcc
+      - MONGO_INITDB_ROOT_PASSWORD=rcc
+  mongo-express:
+      image: mongo-express
+      container_name: mongo_express_rcc
+      restart: always
+      ports:
+        - 8081:8081
+      environment:
+        - ME_CONFIG_MONGODB_ADMINUSERNAME=rcc
+        - ME_CONFIG_MONGODB_ADMINPASSWORD=rcc
+        - ME_CONFIG_MONGODB_SERVER=mongodb
+#  kafka:
+#    image: confluentinc/cp-kafka:7.5.0
+#    container_name: kafka
+#    ports:
+#      - "9092:9092"
+#    environment:
+#      KAFKA_BROKER_ID: 1
+#      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+#      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+#      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  redis:
+    image: redis
+    container_name: redis-container
+    ports:
+      - "6379:6379" # Host port 6379 mapped to container port 6379
+    volumes:
+      - redis-data:/data # Volume untuk persistensi data Redis
 
 volumes:
   postgres-data:
     driver: local
+  redis-data:
+    driver: local
+  mongo: { }

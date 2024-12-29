@@ -3,6 +3,7 @@ package com.rcc.dev.backend.controller;
 import com.rcc.dev.backend.dto.announcement.AnnouncementRequest;
 import com.rcc.dev.backend.dto.response.RCCResponse;
 import com.rcc.dev.backend.service.announcement.iservice.AnnouncementService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,12 +14,12 @@ public class AnnouncementController {
     private final AnnouncementService announcementService;
 
     @PostMapping("/save")
-    public RCCResponse<Object> update(@RequestBody AnnouncementRequest announcementRequest){
-        return announcementService.update(announcementRequest);
+    public RCCResponse<Object> update(HttpServletRequest httpServletRequest,  @RequestBody AnnouncementRequest announcementRequest){
+        return announcementService.update(httpServletRequest,announcementRequest);
     }
 
     @GetMapping("/list")
-    public RCCResponse<Object> list() {
-        return announcementService.list();
+    public RCCResponse<Object> list(HttpServletRequest httpServletRequest) {
+        return announcementService.list(httpServletRequest);
     }
 }
