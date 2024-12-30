@@ -25,18 +25,13 @@ import static java.util.Collections.emptyList;
 @Slf4j
 @Component
 public class JWTUtils {
-    @Value("${ist.properties.data.expire-token-ms:900000}")
-    public static long getExpirationTime;
-
-    @Value("${ist.properties.data.expire-refresh-token-ms:3600000}")
-    public static long getRefreshExpirationtime;
 
     public static KeyPair RSA_KEY = Jwts.SIG.RS512.keyPair().build();
 
     public static long EXPIRATIONTIME = Long.parseLong("900000");
     public static long REFRESH_EXPIRATIONTIME = Long.parseLong("3600000");
 
-    @Value("${ist.properties.data.expire-token-ms:900000}")
+    @Value("${rcc.properties.data.expire-token-ms:900000}")
     public static void setExpirationTime(long getExpirationTime) {
         JWTUtils.EXPIRATIONTIME = getExpirationTime;
     }
@@ -103,30 +98,9 @@ public class JWTUtils {
         }
     }
 
-    public static String claimStringValue(HttpServletRequest request, String key) {
-        return String.valueOf(claimValue(request, key));
-    }
-
-    public static String claimStringValue(String token, String key) {
-        return String.valueOf(claimValue(token, key));
-    }
-
     public static <T> T claimObjectValue(HttpServletRequest request, String key, Class<T> clazz) {
         var claimData = claimValue(request, key);
         return JsonConverterUtil.fromObject(claimData, clazz);
-    }
-
-    public static <T> T claimObjectValue(String token, String key, Class<T> clazz) {
-        var claimData = claimValue(token, key);
-        return JsonConverterUtil.fromObject(claimData, clazz);
-    }
-
-    public static Long claimLongValue(HttpServletRequest request, String key) {
-        return Long.parseLong(String.valueOf(claimValue(request, key)));
-    }
-
-    public static Long claimLongValue(String token, String key) {
-        return Long.parseLong(String.valueOf(claimValue(token, key)));
     }
 
     public static Object claimValue(HttpServletRequest request, String key) {
@@ -191,11 +165,6 @@ public class JWTUtils {
             log.error("JWT claims string is empty: {}", e.getMessage());
             throw new RuntimeException("Token claims is empty");
         }
-    }
-
-    private static Key getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET);
-        return Keys.hmacShaKeyFor(keyBytes);
     }
 
     public static String getToken(HttpServletRequest request) {

@@ -59,10 +59,6 @@ public class AESCrypto {
         }
     }
 
-    public static String encrypt(String value, String key) throws Exception {
-        return encrypt(value, key, SALT);
-    }
-
     public static String encrypt(String value) throws Exception {
         return encrypt(value, SECRETKEY, SALT);
     }
@@ -95,9 +91,6 @@ public class AESCrypto {
         }
     }
 
-    public static String decrypt(String encrypted, String key){
-        return decrypt(encrypted, key, SALT);
-    }
 
     public static String decrypt(String encrypted){
         return decrypt(encrypted, SECRETKEY, SALT);
