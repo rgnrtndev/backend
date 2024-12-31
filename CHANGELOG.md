@@ -11,3 +11,5 @@
     - add user registration
     - add spring security
     - add jwt
+    - add department
+    - add department role

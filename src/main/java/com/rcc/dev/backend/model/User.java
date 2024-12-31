@@ -44,8 +44,10 @@ public class User extends BaseDomain implements Serializable {
     @Column(name = "token")
     private String token;
 
+    private Date birthday;
+
     @Column(name = "is_board")
-    private Boolean isBoard;
+    private Boolean isBoard = false;
 
     @Column(name = "last_success_login_date")
     private Date lastSuccessLoginDate;

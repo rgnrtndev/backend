@@ -1,5 +1,6 @@
 package com.rcc.dev.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,7 +17,7 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 @Entity
-@Table
+@Table(name = "department")
 public class Department extends BaseDomain implements Serializable {
     @Serial
     private static final long serialVersionUID = 2382692392113362964L;
@@ -24,6 +25,16 @@ public class Department extends BaseDomain implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "user_id", nullable = false)
     private Long userId;
+
+    @Column(name = "department_name", nullable = false)
     private String departmentName;
+
+    @OneToOne
+    @JoinColumn(name = "department_role_id", referencedColumnName = "id")
+    @JsonManagedReference
+    private DepartmentRole departmentRole;
 }
+

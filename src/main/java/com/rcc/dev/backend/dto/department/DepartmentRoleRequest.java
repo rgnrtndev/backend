@@ -1,4 +1,4 @@
-package com.rcc.dev.backend.dto.category;
+package com.rcc.dev.backend.dto.department;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,9 +12,9 @@ import java.io.Serializable;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryRequest implements Serializable {
+public class DepartmentRoleRequest implements Serializable {
     @Serial
-    private static final long serialVersionUID = -3540482438494470355L;
+    private static final long serialVersionUID = 6043474594628806572L;
     private Long id;
-    private String categoryName;
+    private String roleName;
 }
