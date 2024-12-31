@@ -13,3 +13,4 @@
     - add jwt
     - add department
     - add department role
+    - 31-12-2024 to do for tommorrow 1 jan 2k25 to fix Offering 

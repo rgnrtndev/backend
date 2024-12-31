@@ -9,6 +9,7 @@ import lombok.experimental.SuperBuilder;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @SuperBuilder
@@ -57,4 +58,7 @@ public class User extends BaseDomain implements Serializable {
 
     @Column(name = "is_deleted")
     private Boolean isDeleted;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<MapUserDepartment> userDepartments;
 }

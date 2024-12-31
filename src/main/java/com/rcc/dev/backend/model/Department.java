@@ -10,6 +10,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -36,5 +37,8 @@ public class Department extends BaseDomain implements Serializable {
     @JoinColumn(name = "department_role_id", referencedColumnName = "id")
     @JsonManagedReference
     private DepartmentRole departmentRole;
+
+    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
+    private List<MapUserDepartment> departmentUsers;
 }
 

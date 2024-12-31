@@ -16,20 +16,14 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 @Entity
-@Table(name = "map_user_department")
-public class MapUserDepartment extends BaseDomain implements Serializable {
+@Table(name = "offering_category")
+public class OfferingCategory extends BaseDomain implements Serializable {
     @Serial
-    private static final long serialVersionUID = 499934035435763971L;
-
+    private static final long serialVersionUID = -4703171436655264697L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "department_id", referencedColumnName = "id")
-    private Department department;
+    @Column(name = "offering_name")
+    private String OfferingName;
 }
