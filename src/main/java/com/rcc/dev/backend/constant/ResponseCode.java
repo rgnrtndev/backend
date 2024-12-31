@@ -20,6 +20,7 @@ public class ResponseCode {
         public static final String LOGOUT_SUCCESSFULLY = "Berhasil Keluar";
         public static final String SESSION_EXPIRED = "Sesi berakhir";
         public static final String REFRESH_TOKEN_NOT_MATCH = "Refresh Token Tidak Sesuai";
+        public static final String USER_IS_DEACTIVATED = "Pengguna tidak di aktifkan";
     }
 
     public static class CommonEng{
@@ -34,5 +35,6 @@ public class ResponseCode {
         public static final String LOGOUT_SUCCESSFULLY = "Logout Successfully";
         public static final String SESSION_EXPIRED = "Session expired";
         public static final String REFRESH_TOKEN_NOT_MATCH = "Refresh Token Not Matched";
+        public static final String USER_IS_DEACTIVATED = "User is deactivated";
     }
 }

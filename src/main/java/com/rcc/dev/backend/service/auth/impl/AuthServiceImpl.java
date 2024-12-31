@@ -3,10 +3,7 @@ package com.rcc.dev.backend.service.auth.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rcc.dev.backend.constant.CacheConstant;
 import com.rcc.dev.backend.constant.ResponseCode;
-import com.rcc.dev.backend.dto.auth.LoginRequest;
-import com.rcc.dev.backend.dto.auth.LoginResponse;
-import com.rcc.dev.backend.dto.auth.RefreshTokenRequest;
-import com.rcc.dev.backend.dto.auth.RefreshTokenResponse;
+import com.rcc.dev.backend.dto.auth.*;
 import com.rcc.dev.backend.dto.response.RCCResponse;
 import com.rcc.dev.backend.repository.UserRepository;
 import com.rcc.dev.backend.service.auth.iservice.AuthService;
@@ -53,6 +50,8 @@ public class AuthServiceImpl implements AuthService {
         claimData.put("username", username);
         claimData.put("id", id);
         claimData.put("isBoard", isBoard);
+        claimData.put("refreshToken", refreshToken);
+
         JWTUtils.setExpirationTime(tokenExpired);
         JWTUtils.setRefreshExpirationTime(refreshTokenExpired);
 
@@ -101,7 +100,8 @@ public class AuthServiceImpl implements AuthService {
         }
         HashMap<String, Object> claimData = mapper.convertValue(cacheRefreshToken, HashMap.class);
         String id = claimData.get("id").toString();
-        if (!claimData.get("refreshToken").equals(refreshTokenRequest.getRefreshToken())) {
+        Object refreshTokenMap = claimData.get("refreshToken");
+        if (!refreshTokenMap.equals(refreshTokenRequest.getRefreshToken())) {
             return ResponseUtil.response(
                     ResponseCode.SUCCESS_RESPONSE_CODE,
                     ResponseCode.CommonIdn.REFRESH_TOKEN_NOT_MATCH,
@@ -135,5 +135,27 @@ public class AuthServiceImpl implements AuthService {
                 ResponseCode.CommonEng.SESSION_EXPIRED,
                 responseToken
         );
+    }
+
+    @Override
+    public RCCResponse<Object> forgotPassword(HttpServletRequest httpServletRequest, ForgotPasswordRequest forgotPasswordRequest) {
+        var userOpt = userRepository.findUserByEmail(forgotPasswordRequest.getEmail());
+        if(userOpt.isEmpty()){
+            return ResponseUtil.response(
+                    ResponseCode.SUCCESS_RESPONSE_CODE,
+                    ResponseCode.CommonIdn.DATA_NOT_FOUND,
+                    ResponseCode.CommonEng.DATA_NOT_FOUND
+            );
+        }
+        var user = userOpt.get();
+        if(user.getIsDeleted()){
+            return ResponseUtil.response(
+                    ResponseCode.SUCCESS_RESPONSE_CODE,
+                    ResponseCode.CommonIdn.USER_IS_DEACTIVATED,
+                    ResponseCode.CommonEng.USER_IS_DEACTIVATED
+            );
+        }
+        // TODO : send email, first setup email
+        return null;
     }
 }

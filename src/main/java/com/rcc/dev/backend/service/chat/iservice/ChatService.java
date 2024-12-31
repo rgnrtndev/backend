@@ -1,0 +1,9 @@
+package com.rcc.dev.backend.service.chat.iservice;
+
+import com.rcc.dev.backend.model.User;
+
+import java.util.List;
+
+public interface ChatService {
+    List<User> findAllUsers();
+}
