@@ -14,7 +14,7 @@ import java.io.Serializable;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OfferingCategoryRequest extends BaseDomain implements Serializable {
+public class OfferingCategoryRequest implements Serializable {
     @Serial
     private static final long serialVersionUID = 3639507794732558126L;
     private Long id;

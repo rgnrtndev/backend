@@ -5,6 +5,7 @@ import com.rcc.dev.backend.dto.offering.OfferingCategoryRequest;
 import com.rcc.dev.backend.dto.response.RCCResponse;
 import com.rcc.dev.backend.model.OfferingCategory;
 import com.rcc.dev.backend.repository.OfferingCategoryRepository;
+import com.rcc.dev.backend.service.offering.iservice.OfferingCategoryService;
 import com.rcc.dev.backend.service.offering.iservice.OfferingService;
 import com.rcc.dev.backend.util.ResponseUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,7 +16,7 @@ import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
-public class OfferingCategoryServiceImpl implements OfferingService {
+public class OfferingCategoryServiceImpl implements OfferingCategoryService {
 
     private final OfferingCategoryRepository offeringCategoryRepository;
 
@@ -49,16 +50,74 @@ public class OfferingCategoryServiceImpl implements OfferingService {
 
     @Override
     public RCCResponse<Object> list(HttpServletRequest httpServletRequest) {
-        return null;
+        try {
+            var offeringCategories = offeringCategoryRepository.findAll();
+            return ResponseUtil.response(
+                    ResponseCode.SUCCESS_RESPONSE_CODE,
+                    ResponseCode.CommonIdn.SUCCESS_GET_ALL_DATA,
+                    ResponseCode.CommonEng.SUCCESS_GET_ALL_DATA,
+                    offeringCategories
+            );
+        }catch (Exception e){
+            return ResponseUtil.response(
+                    ResponseCode.ERROR_RESPONSE_CODE,
+                    ResponseCode.CommonIdn.ERROR,
+                    ResponseCode.CommonEng.ERROR
+            );
+        }
     }
 
     @Override
     public RCCResponse<Object> detail(HttpServletRequest httpServletRequest, Long id) {
-        return null;
+        try {
+            var offeringDetail = offeringCategoryRepository.findById(id);
+            if(offeringDetail.isEmpty()){
+                return ResponseUtil.response(
+                        ResponseCode.SUCCESS_RESPONSE_CODE,
+                        ResponseCode.CommonIdn.DATA_NOT_FOUND,
+                        ResponseCode.CommonEng.DATA_NOT_FOUND,
+                        offeringDetail
+                );
+            }
+            return ResponseUtil.response(
+                    ResponseCode.SUCCESS_RESPONSE_CODE,
+                    ResponseCode.CommonIdn.SUCCESS_GET_DATA_DETAIL,
+                    ResponseCode.CommonEng.SUCCESS_GET_DATA_DETAIL,
+                    offeringDetail
+            );
+        }catch (Exception e){
+            return ResponseUtil.response(
+                    ResponseCode.ERROR_RESPONSE_CODE,
+                    ResponseCode.CommonIdn.ERROR,
+                    ResponseCode.CommonEng.ERROR
+            );
+        }
     }
 
     @Override
     public RCCResponse<Object> delete(HttpServletRequest httpServletRequest, Long id) {
-        return null;
+        try{
+            var offeringDetail = offeringCategoryRepository.findById(id);
+            if(offeringDetail.isEmpty()){
+                return ResponseUtil.response(
+                        ResponseCode.SUCCESS_RESPONSE_CODE,
+                        ResponseCode.CommonIdn.DATA_NOT_FOUND,
+                        ResponseCode.CommonEng.DATA_NOT_FOUND,
+                        offeringDetail
+                );
+            }
+            offeringCategoryRepository.delete(offeringDetail.get());
+            return ResponseUtil.response(
+                    ResponseCode.SUCCESS_RESPONSE_CODE,
+                    ResponseCode.CommonIdn.SUCCESS_DELETED_DATA,
+                    ResponseCode.CommonEng.SUCCESS_DELETED_DATA
+            );
+        }catch (Exception e){
+            return ResponseUtil.response(
+                    ResponseCode.ERROR_RESPONSE_CODE,
+                    ResponseCode.CommonIdn.ERROR,
+                    ResponseCode.CommonEng.ERROR
+            );
+        }
     }
 }

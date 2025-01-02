@@ -1,11 +1,5 @@
 package com.rcc.dev.backend.dto.offering;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.rcc.dev.backend.model.BaseDomain;
-import com.rcc.dev.backend.model.OfferingCategory;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,7 +14,7 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OfferingRequest extends BaseDomain implements Serializable {
+public class OfferingRequest implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 176630179421991431L;

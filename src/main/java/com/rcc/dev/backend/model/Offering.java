@@ -1,5 +1,6 @@
 package com.rcc.dev.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -49,8 +50,8 @@ public class Offering extends BaseDomain implements Serializable {
     @Column(name = "amount")
     private BigDecimal amount;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "offering_category_id", referencedColumnName = "id")
-    @JsonManagedReference
+    @JsonBackReference
     private OfferingCategory offeringCategory;
 }
