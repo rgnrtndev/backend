@@ -15,7 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Objects;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @RequiredArgsConstructor
@@ -124,16 +125,33 @@ public class OfferingServiceImpl implements OfferingService {
      * total offering reduce amounts to pay office boy or others
      * all with all reduce amounts
      * total offering amounts by one year with category
+     * filter just only by offering category in one sabbath, one month, one year, or by triwulan
      * */
     @Override
     public RCCResponse<Object> offeringChart(HttpServletRequest httpServletRequest) {
         try {
-            var offerings = offeringRepository.findOfferingChartData();
+            var offerings = offeringRepository.getOfferingChartPojo();
+
+            BigDecimal totalAmount = BigDecimal.ZERO;
+            List<Map<String, Object>> offeringResponse = new ArrayList<>();
+
+            for (var offering : offerings) {
+                Map<String, Object> response = new HashMap<>();
+                response.put("sabbath", offering.getSabbathDate());
+                response.put("offeringName", offering.getOfferingName());
+                response.put("id", offering.getId());
+                response.put("amount", offering.getAmount());
+                totalAmount = totalAmount.add(offering.getAmount());
+                offeringResponse.add(response);
+            }
+            Map<String, Object> finalResponse = new HashMap<>();
+            finalResponse.put("offerings", offeringResponse);
+            finalResponse.put("totalAmount", totalAmount);
             return ResponseUtil.response(
                     ResponseCode.SUCCESS_RESPONSE_CODE,
                     ResponseCode.CommonIdn.SUCCESS_GET_ALL_DATA,
                     ResponseCode.CommonEng.SUCCESS_GET_ALL_DATA,
-                    offerings
+                    finalResponse
             );
         }catch (Exception e){
             return ResponseUtil.response(
