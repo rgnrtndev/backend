@@ -20,6 +20,9 @@ public class AuthenticationUtils {
     private final CacheUtil cacheUtil;
 
     public UserDTO validateAuthentication(HttpServletRequest httpServletRequest) {
+        if(Objects.isNull(JWTUtils.getToken(httpServletRequest))){
+            throw new UnauthorizedException("Must Be Login First");
+        }
         var userData = JWTUtils.claimObjectValue(httpServletRequest, ApiConstant.KEY_CLAIM_USER_LOGIN, UserDTO.class);
 
         if (Objects.nonNull(userData.getId())) {
