@@ -5,11 +5,12 @@ import com.rcc.dev.backend.dto.offering.OfferingRequest;
 import com.rcc.dev.backend.dto.response.RCCResponse;
 import com.rcc.dev.backend.model.OfferingCategory;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.ResponseEntity;
 
 public interface OfferingService {
-    RCCResponse<Object> update(HttpServletRequest httpServletRequest, OfferingRequest offeringRequest);
-    RCCResponse<Object> list(HttpServletRequest httpServletRequest);
-    RCCResponse<Object> detail(HttpServletRequest httpServletRequest, Long id);
-    RCCResponse<Object> delete(HttpServletRequest httpServletRequest, Long id);
-    RCCResponse<Object> offeringChart(HttpServletRequest httpServletRequest);
+    ResponseEntity<RCCResponse<Object>> update(HttpServletRequest httpServletRequest, OfferingRequest offeringRequest);
+    ResponseEntity<RCCResponse<Object>> list(HttpServletRequest httpServletRequest);
+    ResponseEntity<RCCResponse<Object>> detail(HttpServletRequest httpServletRequest, Long id);
+    ResponseEntity<RCCResponse<Object>> delete(HttpServletRequest httpServletRequest, Long id);
+    ResponseEntity<RCCResponse<Object>> offeringChart(HttpServletRequest httpServletRequest);
 }

@@ -12,6 +12,8 @@ import com.rcc.dev.backend.service.offering.iservice.OfferingService;
 import com.rcc.dev.backend.util.ResponseUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -26,7 +28,7 @@ public class OfferingServiceImpl implements OfferingService {
     private final OfferingCategoryRepository offeringCategoryRepository;
 
     @Override
-    public RCCResponse<Object> update(HttpServletRequest httpServletRequest, OfferingRequest offeringRequest) {
+    public ResponseEntity<RCCResponse<Object>> update(HttpServletRequest httpServletRequest, OfferingRequest offeringRequest) {
         try {
             Offering offering = new Offering();
             if(Objects.isNull(offeringRequest.getId()) || offeringRequest.getId().equals(0L)){
@@ -59,61 +61,61 @@ public class OfferingServiceImpl implements OfferingService {
 
             var savedOffering = offeringRepository.save(offering);
 
-            return ResponseUtil.response(
+            return ResponseEntity.ok(ResponseUtil.response(
                     ResponseCode.SUCCESS_RESPONSE_CODE,
                     ResponseCode.CommonIdn.SUCCESS_SAVE_DATA,
                     ResponseCode.CommonEng.SUCCESS_SAVE_DATA,
                     savedOffering
-            );
+            ));
         }catch (Exception e){
-            return ResponseUtil.response(
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseUtil.response(
                     ResponseCode.ERROR_RESPONSE_CODE,
                     ResponseCode.CommonIdn.ERROR,
                     ResponseCode.CommonEng.ERROR
-            );
+            ));
         }
     }
 
     @Override
-    public RCCResponse<Object> list(HttpServletRequest httpServletRequest) {
+    public ResponseEntity<RCCResponse<Object>> list(HttpServletRequest httpServletRequest) {
         try {
             var listOffering = offeringRepository.findAll();
-            return ResponseUtil.response(
+            return ResponseEntity.ok(ResponseUtil.response(
                     ResponseCode.SUCCESS_RESPONSE_CODE,
                     ResponseCode.CommonIdn.SUCCESS_GET_ALL_DATA,
                     ResponseCode.CommonEng.SUCCESS_GET_ALL_DATA,
                     listOffering
-            );
+            ));
         }catch (Exception e){
-            return ResponseUtil.response(
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseUtil.response(
                     ResponseCode.ERROR_RESPONSE_CODE,
                     ResponseCode.CommonIdn.ERROR,
                     ResponseCode.CommonEng.ERROR
-            );
+            ));
         }
     }
 
     @Override
-    public RCCResponse<Object> detail(HttpServletRequest httpServletRequest, Long id) {
+    public ResponseEntity<RCCResponse<Object>> detail(HttpServletRequest httpServletRequest, Long id) {
         try {
             var offeringDetail = offeringRepository.findById(id);
-            return ResponseUtil.response(
+            return ResponseEntity.ok(ResponseUtil.response(
                     ResponseCode.SUCCESS_RESPONSE_CODE,
                     ResponseCode.CommonIdn.SUCCESS_GET_DATA_DETAIL,
                     ResponseCode.CommonEng.SUCCESS_GET_DATA_DETAIL,
                     offeringDetail
-            );
+            ));
         }catch (Exception e){
-            return ResponseUtil.response(
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseUtil.response(
                     ResponseCode.ERROR_RESPONSE_CODE,
                     ResponseCode.CommonIdn.ERROR,
                     ResponseCode.CommonEng.ERROR
-            );
+            ));
         }
     }
 
     @Override
-    public RCCResponse<Object> delete(HttpServletRequest httpServletRequest, Long id) {
+    public ResponseEntity<RCCResponse<Object>> delete(HttpServletRequest httpServletRequest, Long id) {
         return null;
     }
 
@@ -128,7 +130,7 @@ public class OfferingServiceImpl implements OfferingService {
      * filter just only by offering category in one sabbath, one month, one year, or by triwulan
      * */
     @Override
-    public RCCResponse<Object> offeringChart(HttpServletRequest httpServletRequest) {
+    public ResponseEntity<RCCResponse<Object>> offeringChart(HttpServletRequest httpServletRequest) {
         try {
             var offerings = offeringRepository.getOfferingChartPojo();
 
@@ -147,18 +149,18 @@ public class OfferingServiceImpl implements OfferingService {
             Map<String, Object> finalResponse = new HashMap<>();
             finalResponse.put("offerings", offeringResponse);
             finalResponse.put("totalAmount", totalAmount);
-            return ResponseUtil.response(
+            return ResponseEntity.ok(ResponseUtil.response(
                     ResponseCode.SUCCESS_RESPONSE_CODE,
                     ResponseCode.CommonIdn.SUCCESS_GET_ALL_DATA,
                     ResponseCode.CommonEng.SUCCESS_GET_ALL_DATA,
                     finalResponse
-            );
+            ));
         }catch (Exception e){
-            return ResponseUtil.response(
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseUtil.response(
                     ResponseCode.ERROR_RESPONSE_CODE,
                     ResponseCode.CommonIdn.ERROR,
                     ResponseCode.CommonEng.ERROR
-            );
+            ));
         }
     }
 }

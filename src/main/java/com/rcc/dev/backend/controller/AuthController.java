@@ -18,8 +18,8 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public RCCResponse<Object> login(HttpServletRequest httpServletRequest, @RequestBody LoginRequest loginRequest){
-        return authService.login(httpServletRequest, loginRequest);
+    public RCCResponse<Object> login(@RequestBody LoginRequest loginRequest){
+        return authService.login(loginRequest);
     }
 
     @PostMapping("/refresh")

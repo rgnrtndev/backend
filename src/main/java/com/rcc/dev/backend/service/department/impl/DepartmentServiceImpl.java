@@ -12,6 +12,8 @@ import com.rcc.dev.backend.service.department.iservice.DepartmentService;
 import com.rcc.dev.backend.util.ResponseUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,26 +29,26 @@ public class DepartmentServiceImpl implements DepartmentService {
     private final DepartmentRoleRepository departmentRoleRepository;
 
     @Override
-    public RCCResponse<Object> findAllRoleDepartment(HttpServletRequest httpServletRequest) {
+    public ResponseEntity<RCCResponse<Object>> findAllRoleDepartment(HttpServletRequest httpServletRequest) {
         try {
             var roles = departmentRoleRepository.findAll();
-            return ResponseUtil.response(
+            return ResponseEntity.ok(ResponseUtil.response(
                     ResponseCode.SUCCESS_RESPONSE_CODE,
                     ResponseCode.CommonIdn.SUCCESS_GET_ALL_DATA,
                     ResponseCode.CommonEng.SUCCESS_GET_ALL_DATA,
                     roles
-            );
+            ));
         }catch (Exception e){
-            return ResponseUtil.response(
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseUtil.response(
                     ResponseCode.ERROR_RESPONSE_CODE,
                     ResponseCode.CommonIdn.ERROR,
                     ResponseCode.CommonEng.ERROR
-            );
+            ));
         }
     }
 
     @Override
-    public RCCResponse<Object> updateRoleDepartment(HttpServletRequest httpServletRequest, DepartmentRoleRequest departmentRoleRequest) {
+    public ResponseEntity<RCCResponse<Object>> updateRoleDepartment(HttpServletRequest httpServletRequest, DepartmentRoleRequest departmentRoleRequest) {
         try {
             DepartmentRole departmentRole;
             if(Objects.isNull(departmentRoleRequest.getId()) || departmentRoleRequest.getId().equals(0L)){
@@ -56,105 +58,105 @@ public class DepartmentServiceImpl implements DepartmentService {
             }else{
                 var department = departmentRoleRepository.findById(departmentRoleRequest.getId());
                 if(department.isEmpty()){
-                    return ResponseUtil.response(
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseUtil.response(
                             ResponseCode.ERROR_RESPONSE_CODE,
                             ResponseCode.CommonIdn.DATA_NOT_FOUND,
                             ResponseCode.CommonEng.DATA_NOT_FOUND
-                    );
+                    ));
                 }
                 departmentRole = department.get();
                 departmentRole.setRoleName(departmentRoleRequest.getRoleName());
             }
             var saveDepartmentRole = departmentRoleRepository.save(departmentRole);
-            return ResponseUtil.response(
+            return ResponseEntity.ok(ResponseUtil.response(
                     ResponseCode.SUCCESS_RESPONSE_CODE,
                     ResponseCode.CommonIdn.SUCCESS_GET_ALL_DATA,
                     ResponseCode.CommonEng.SUCCESS_GET_ALL_DATA,
                     saveDepartmentRole
-            );
+            ));
         }catch (Exception e){
-            return ResponseUtil.response(
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseUtil.response(
                     ResponseCode.ERROR_RESPONSE_CODE,
                     ResponseCode.CommonIdn.ERROR,
                     ResponseCode.CommonEng.ERROR
-            );
+            ));
         }
     }
 
     @Override
-    public RCCResponse<Object> detailRoleDepartment(HttpServletRequest httpServletRequest, Long roleDepartmentId) {
+    public ResponseEntity<RCCResponse<Object>> detailRoleDepartment(HttpServletRequest httpServletRequest, Long roleDepartmentId) {
         try{
             var department = departmentRoleRepository.findById(roleDepartmentId);
             if(department.isEmpty()){
-                return ResponseUtil.response(
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseUtil.response(
                         ResponseCode.ERROR_RESPONSE_CODE,
                         ResponseCode.CommonIdn.DATA_NOT_FOUND,
                         ResponseCode.CommonEng.DATA_NOT_FOUND
-                );
+                ));
             }
-            return ResponseUtil.response(
+            return ResponseEntity.ok(ResponseUtil.response(
                     ResponseCode.SUCCESS_RESPONSE_CODE,
                     ResponseCode.CommonIdn.SUCCESS_GET_DATA_DETAIL,
                     ResponseCode.CommonEng.SUCCESS_GET_DATA_DETAIL,
                     department.get()
-            );
+            ));
         }catch (Exception e){
-            return ResponseUtil.response(
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseUtil.response(
                     ResponseCode.ERROR_RESPONSE_CODE,
                     ResponseCode.CommonIdn.ERROR,
                     ResponseCode.CommonEng.ERROR
-            );
+            ));
         }
     }
 
     @Override
-    public RCCResponse<Object> deleteRoleDepartment(HttpServletRequest httpServletRequest, Long roleDepartmentId) {
+    public ResponseEntity<RCCResponse<Object>> deleteRoleDepartment(HttpServletRequest httpServletRequest, Long roleDepartmentId) {
         try {
             var department = departmentRoleRepository.findById(roleDepartmentId);
             if(department.isEmpty()){
-                return ResponseUtil.response(
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseUtil.response(
                         ResponseCode.ERROR_RESPONSE_CODE,
                         ResponseCode.CommonIdn.DATA_NOT_FOUND,
                         ResponseCode.CommonEng.DATA_NOT_FOUND
-                );
+                ));
             }
             departmentRoleRepository.delete(department.get());
-            return ResponseUtil.response(
+            return ResponseEntity.ok(ResponseUtil.response(
                     ResponseCode.SUCCESS_RESPONSE_CODE,
                     ResponseCode.CommonIdn.SUCCESS_DELETED_DATA,
                     ResponseCode.CommonEng.SUCCESS_DELETED_DATA
-            );
+            ));
         }catch (Exception e){
-            return ResponseUtil.response(
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseUtil.response(
                     ResponseCode.ERROR_RESPONSE_CODE,
                     ResponseCode.CommonIdn.ERROR,
                     ResponseCode.CommonEng.ERROR
-            );
+            ));
         }
     }
 
     @Transactional
     @Override
-    public RCCResponse<Object> findAllDepartment(HttpServletRequest httpServletRequest) {
+    public ResponseEntity<RCCResponse<Object>> findAllDepartment(HttpServletRequest httpServletRequest) {
         try {
             var departments = departmentRepository.findAll();
-            return ResponseUtil.response(
+            return ResponseEntity.ok(ResponseUtil.response(
                     ResponseCode.SUCCESS_RESPONSE_CODE,
                     ResponseCode.CommonIdn.SUCCESS_GET_DATA_DETAIL,
                     ResponseCode.CommonEng.SUCCESS_GET_DATA_DETAIL,
                     departments
-            );
+            ));
         }catch (Exception e){
-            return ResponseUtil.response(
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseUtil.response(
                     ResponseCode.ERROR_RESPONSE_CODE,
                     ResponseCode.CommonIdn.ERROR,
                     ResponseCode.CommonEng.ERROR
-            );
+            ));
         }
     }
 
     @Override
-    public RCCResponse<Object> updateDepartment(HttpServletRequest httpServletRequest, DepartmentRequest departmentRequest) {
+    public ResponseEntity<RCCResponse<Object>> updateDepartment(HttpServletRequest httpServletRequest, DepartmentRequest departmentRequest) {
         try{
             var department = new Department();
             if(Objects.isNull(departmentRequest.getId()) || departmentRequest.getId().equals(0L)){
@@ -168,11 +170,11 @@ public class DepartmentServiceImpl implements DepartmentService {
             }else{
                 var departmentOpt = departmentRepository.findById(departmentRequest.getId());
                 if(departmentOpt.isEmpty()){
-                    return ResponseUtil.response(
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseUtil.response(
                             ResponseCode.ERROR_RESPONSE_CODE,
                             ResponseCode.CommonIdn.DATA_NOT_FOUND,
                             ResponseCode.CommonEng.DATA_NOT_FOUND
-                    );
+                    ));
                 }
                 department = departmentOpt.get();
                 department.setDepartmentName(department.getDepartmentName());
@@ -185,70 +187,70 @@ public class DepartmentServiceImpl implements DepartmentService {
 
             department = departmentRepository.save(department);
 
-            return ResponseUtil.response(
+            return ResponseEntity.ok(ResponseUtil.response(
                     ResponseCode.SUCCESS_RESPONSE_CODE,
                     ResponseCode.CommonIdn.SUCCESS_GET_DATA_DETAIL,
                     ResponseCode.CommonEng.SUCCESS_GET_DATA_DETAIL,
                     department
-            );
+            ));
         }catch (Exception e){
-            return ResponseUtil.response(
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseUtil.response(
                     ResponseCode.ERROR_RESPONSE_CODE,
                     ResponseCode.CommonIdn.ERROR,
                     ResponseCode.CommonEng.ERROR
-            );
+            ));
         }
     }
 
     @Override
-    public RCCResponse<Object> detailDepartment(HttpServletRequest httpServletRequest, Long departmentId) {
+    public ResponseEntity<RCCResponse<Object>> detailDepartment(HttpServletRequest httpServletRequest, Long departmentId) {
         try {
             var departmentOpt = departmentRepository.findById(departmentId);
             if(departmentOpt.isEmpty()){
-                return ResponseUtil.response(
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseUtil.response(
                         ResponseCode.ERROR_RESPONSE_CODE,
                         ResponseCode.CommonIdn.DATA_NOT_FOUND,
                         ResponseCode.CommonEng.DATA_NOT_FOUND
-                );
+                ));
             }
-            return ResponseUtil.response(
+            return ResponseEntity.ok(ResponseUtil.response(
                     ResponseCode.SUCCESS_RESPONSE_CODE,
                     ResponseCode.CommonIdn.SUCCESS_GET_DATA_DETAIL,
                     ResponseCode.CommonEng.SUCCESS_GET_DATA_DETAIL,
                     departmentOpt.get()
-            );
+            ));
         }catch (Exception e){
-            return ResponseUtil.response(
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseUtil.response(
                     ResponseCode.ERROR_RESPONSE_CODE,
                     ResponseCode.CommonIdn.ERROR,
                     ResponseCode.CommonEng.ERROR
-            );
+            ));
         }
     }
 
     @Override
-    public RCCResponse<Object> deleteDepartment(HttpServletRequest httpServletRequest, Long departmentId) {
+    public ResponseEntity<RCCResponse<Object>> deleteDepartment(HttpServletRequest httpServletRequest, Long departmentId) {
         try {
             var departmentOpt = departmentRepository.findById(departmentId);
             if(departmentOpt.isEmpty()){
-                return ResponseUtil.response(
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseUtil.response(
                         ResponseCode.ERROR_RESPONSE_CODE,
                         ResponseCode.CommonIdn.DATA_NOT_FOUND,
                         ResponseCode.CommonEng.DATA_NOT_FOUND
-                );
+                ));
             }
             departmentRepository.delete(departmentOpt.get());
-            return ResponseUtil.response(
+            return ResponseEntity.status(HttpStatus.OK).body(ResponseUtil.response(
                     ResponseCode.SUCCESS_RESPONSE_CODE,
                     ResponseCode.CommonIdn.SUCCESS_DELETED_DATA,
                     ResponseCode.CommonEng.SUCCESS_DELETED_DATA
-            );
+            ));
         }catch (Exception e){
-            return ResponseUtil.response(
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseUtil.response(
                     ResponseCode.ERROR_RESPONSE_CODE,
                     ResponseCode.CommonIdn.ERROR,
                     ResponseCode.CommonEng.ERROR
-            );
+            ));
         }
     }
 }

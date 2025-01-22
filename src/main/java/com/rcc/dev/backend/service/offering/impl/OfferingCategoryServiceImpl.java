@@ -10,6 +10,8 @@ import com.rcc.dev.backend.service.offering.iservice.OfferingService;
 import com.rcc.dev.backend.util.ResponseUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -21,7 +23,7 @@ public class OfferingCategoryServiceImpl implements OfferingCategoryService {
     private final OfferingCategoryRepository offeringCategoryRepository;
 
     @Override
-    public RCCResponse<Object> update(HttpServletRequest httpServletRequest, OfferingCategoryRequest offeringCategoryRequest) {
+    public ResponseEntity<RCCResponse<Object>> update(HttpServletRequest httpServletRequest, OfferingCategoryRequest offeringCategoryRequest) {
         try {
             OfferingCategory offeringCategory;
             if (Objects.isNull(offeringCategoryRequest.getId()) || offeringCategoryRequest.getId().equals(0L)) {
@@ -33,91 +35,91 @@ public class OfferingCategoryServiceImpl implements OfferingCategoryService {
                 offeringCategory.setOfferingName(offeringCategoryRequest.getOfferingName());
             }
             var saveOfferingCategory = offeringCategoryRepository.save(offeringCategory);
-            return ResponseUtil.response(
+            return ResponseEntity.ok(ResponseUtil.response(
                     ResponseCode.SUCCESS_RESPONSE_CODE,
                     ResponseCode.CommonIdn.SUCCESS_SAVE_DATA,
                     ResponseCode.CommonEng.SUCCESS_SAVE_DATA,
                     saveOfferingCategory
-            );
+            ));
         }catch (Exception e){
-            return ResponseUtil.response(
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseUtil.response(
                     ResponseCode.ERROR_RESPONSE_CODE,
                     ResponseCode.CommonIdn.ERROR,
                     ResponseCode.CommonEng.ERROR
-            );
+            ));
         }
     }
 
     @Override
-    public RCCResponse<Object> list(HttpServletRequest httpServletRequest) {
+    public ResponseEntity<RCCResponse<Object>> list(HttpServletRequest httpServletRequest) {
         try {
             var offeringCategories = offeringCategoryRepository.findAll();
-            return ResponseUtil.response(
+            return ResponseEntity.ok(ResponseUtil.response(
                     ResponseCode.SUCCESS_RESPONSE_CODE,
                     ResponseCode.CommonIdn.SUCCESS_GET_ALL_DATA,
                     ResponseCode.CommonEng.SUCCESS_GET_ALL_DATA,
                     offeringCategories
-            );
+            ));
         }catch (Exception e){
-            return ResponseUtil.response(
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseUtil.response(
                     ResponseCode.ERROR_RESPONSE_CODE,
                     ResponseCode.CommonIdn.ERROR,
                     ResponseCode.CommonEng.ERROR
-            );
+            ));
         }
     }
 
     @Override
-    public RCCResponse<Object> detail(HttpServletRequest httpServletRequest, Long id) {
+    public ResponseEntity<RCCResponse<Object>> detail(HttpServletRequest httpServletRequest, Long id) {
         try {
             var offeringDetail = offeringCategoryRepository.findById(id);
             if(offeringDetail.isEmpty()){
-                return ResponseUtil.response(
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(ResponseUtil.response(
                         ResponseCode.SUCCESS_RESPONSE_CODE,
                         ResponseCode.CommonIdn.DATA_NOT_FOUND,
                         ResponseCode.CommonEng.DATA_NOT_FOUND,
                         offeringDetail
-                );
+                ));
             }
-            return ResponseUtil.response(
+            return ResponseEntity.ok(ResponseUtil.response(
                     ResponseCode.SUCCESS_RESPONSE_CODE,
                     ResponseCode.CommonIdn.SUCCESS_GET_DATA_DETAIL,
                     ResponseCode.CommonEng.SUCCESS_GET_DATA_DETAIL,
                     offeringDetail
-            );
+            ));
         }catch (Exception e){
-            return ResponseUtil.response(
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseUtil.response(
                     ResponseCode.ERROR_RESPONSE_CODE,
                     ResponseCode.CommonIdn.ERROR,
                     ResponseCode.CommonEng.ERROR
-            );
+            ));
         }
     }
 
     @Override
-    public RCCResponse<Object> delete(HttpServletRequest httpServletRequest, Long id) {
+    public ResponseEntity<RCCResponse<Object>> delete(HttpServletRequest httpServletRequest, Long id) {
         try{
             var offeringDetail = offeringCategoryRepository.findById(id);
             if(offeringDetail.isEmpty()){
-                return ResponseUtil.response(
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(ResponseUtil.response(
                         ResponseCode.SUCCESS_RESPONSE_CODE,
                         ResponseCode.CommonIdn.DATA_NOT_FOUND,
                         ResponseCode.CommonEng.DATA_NOT_FOUND,
                         offeringDetail
-                );
+                ));
             }
             offeringCategoryRepository.delete(offeringDetail.get());
-            return ResponseUtil.response(
+            return ResponseEntity.ok(ResponseUtil.response(
                     ResponseCode.SUCCESS_RESPONSE_CODE,
                     ResponseCode.CommonIdn.SUCCESS_DELETED_DATA,
                     ResponseCode.CommonEng.SUCCESS_DELETED_DATA
-            );
+            ));
         }catch (Exception e){
-            return ResponseUtil.response(
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseUtil.response(
                     ResponseCode.ERROR_RESPONSE_CODE,
                     ResponseCode.CommonIdn.ERROR,
                     ResponseCode.CommonEng.ERROR
-            );
+            ));
         }
     }
 }

@@ -16,8 +16,9 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-//                        .allowedOrigins("") // use this when url fe is static
+//                        .allowedOrigins("*") // use this when url fe is static
                         .allowedOriginPatterns("*") // just only dynamic fe url
+//                        .allowedOriginPatterns("https://*.ngrok.io", "http://localhost:3000") // Allow Ngrok and local frontend
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);

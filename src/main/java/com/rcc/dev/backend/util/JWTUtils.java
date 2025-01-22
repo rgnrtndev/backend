@@ -8,11 +8,12 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
+//import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+//import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -66,36 +67,6 @@ public class JWTUtils {
             throw new RuntimeException(e);
         }
         return JWT;
-    }
-
-    public static Authentication getAuthentication(HttpServletRequest request) {
-        try {
-            var token = getToken(request);
-            if (token == null) return null;
-
-            token = AESCrypto.decrypt(token.trim());
-            var claims = Jwts.parser()
-                    .verifyWith(RSA_KEY.getPublic())
-                    .build()
-                    .parseSignedClaims(token)
-                    .getPayload();
-
-            return claims != null && !claims.isEmpty() ?
-                    new UsernamePasswordAuthenticationToken(claims.get("user"), claims.get("role"), emptyList()) :
-                    null;
-        } catch (MalformedJwtException e) {
-            log.error("Invalid JWT token: {}", e.getMessage());
-            throw new RuntimeException("Invalid Token");
-        } catch (ExpiredJwtException e) {
-            log.error("JWT token is expired: {}", e.getMessage());
-            throw new RuntimeException("Token Expired");
-        } catch (UnsupportedJwtException e) {
-            log.error("JWT token is unsupported: {}", e.getMessage());
-            throw new RuntimeException("Unsupported Token");
-        } catch (IllegalArgumentException e) {
-            log.error("JWT claims string is empty: {}", e.getMessage());
-            throw new RuntimeException("Token claims is empty");
-        }
     }
 
     public static <T> T claimObjectValue(HttpServletRequest request, String key, Class<T> clazz) {
@@ -164,6 +135,9 @@ public class JWTUtils {
         } catch (IllegalArgumentException e) {
             log.error("JWT claims string is empty: {}", e.getMessage());
             throw new RuntimeException("Token claims is empty");
+        }catch (SignatureException e) {
+            log.error("JWT signature does not match: {}", e.getMessage());
+            throw new RuntimeException("Invalid signature");
         }
     }
 

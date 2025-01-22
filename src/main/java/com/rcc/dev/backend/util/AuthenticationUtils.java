@@ -2,6 +2,7 @@ package com.rcc.dev.backend.util;
 
 import com.rcc.dev.backend.constant.ApiConstant;
 import com.rcc.dev.backend.constant.CacheConstant;
+import com.rcc.dev.backend.dto.auth.UserDTO;
 import com.rcc.dev.backend.exception.UnauthorizedException;
 import com.rcc.dev.backend.model.User;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,8 +19,8 @@ import java.util.Objects;
 public class AuthenticationUtils {
     private final CacheUtil cacheUtil;
 
-    public User validateAuthentication(HttpServletRequest httpServletRequest) {
-        var userData = JWTUtils.claimObjectValue(httpServletRequest, ApiConstant.KEY_CLAIM_USER_LOGIN, User.class);
+    public UserDTO validateAuthentication(HttpServletRequest httpServletRequest) {
+        var userData = JWTUtils.claimObjectValue(httpServletRequest, ApiConstant.KEY_CLAIM_USER_LOGIN, UserDTO.class);
 
         if (Objects.nonNull(userData.getId())) {
             String cacheToken = cacheUtil.getCacheString(CacheConstant.CACHE_TOKEN, userData.getId());

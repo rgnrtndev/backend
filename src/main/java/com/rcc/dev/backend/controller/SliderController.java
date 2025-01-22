@@ -6,6 +6,7 @@ import com.rcc.dev.backend.model.Slider;
 import com.rcc.dev.backend.service.slider.iservice.SliderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,12 +19,14 @@ public class SliderController {
     private SliderService sliderService;
 
     @PostMapping("/save")
-    public RCCResponse<Object> saveSlider(@RequestBody SliderRequest sliderRequest){
+    public ResponseEntity<RCCResponse<Object>> saveSlider(@RequestBody SliderRequest sliderRequest){
         return sliderService.saveSlider(sliderRequest);
     }
 
     @GetMapping("/list")
-    public RCCResponse<Object> listSlider(){
+    public ResponseEntity<RCCResponse<Object>> listSlider(){
         return sliderService.getAllSlider();
     }
+
+
 }

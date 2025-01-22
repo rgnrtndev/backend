@@ -26,9 +26,9 @@ public class AuthServiceImpl implements AuthService {
     private final CacheUtil cacheUtil;
 
     @Override
-    public RCCResponse<Object> login(HttpServletRequest httpServletRequest, LoginRequest loginRequest) {
+    public RCCResponse<Object> login(LoginRequest loginRequest) {
         var dataUser = userRepository.findByUsernameAndIsDeletedFalse(loginRequest.getUsername());
-        if(dataUser.isEmpty()){
+        if(dataUser.isEmpty() || !dataUser.get().getPassword().equals(loginRequest.getPassword())){
             return ResponseUtil.response(
                     ResponseCode.ERROR_RESPONSE_CODE,
                     ResponseCode.CommonIdn.INCORRECT_USERNAME_PASSWORD,
@@ -41,10 +41,10 @@ public class AuthServiceImpl implements AuthService {
         Boolean isBoard = dataUser.get().getIsBoard();
 
         HashMap<String, Object> claimData = new HashMap<>();
-        long portalTokenAge = 1800;//Long.parseLong(generalParameterRepository.getValueWhereName(GeneralParameterConstant.PORTAL_TOKEN_AGE));
-        long portalRefreshTokenAge = 2700;//Long.parseLong(generalParameterRepository.getValueWhereName(GeneralParameterConstant.PORTAL_REFRESH_TOKEN_AGE));
-        long tokenExpired = 1800000;//Long.parseLong(generalParameterRepository.getValueWhereName(GeneralParameterConstant.PORTAL_TOKEN_EXPIRED));
-        long refreshTokenExpired = 1800000;//Long.parseLong(generalParameterRepository.getValueWhereName(GeneralParameterConstant.PORTAL_REFRESH_TOKEN_EXPIRED));
+        long portalTokenAge = 180;//1800;//Long.parseLong(generalParameterRepository.getValueWhereName(GeneralParameterConstant.PORTAL_TOKEN_AGE));
+        long portalRefreshTokenAge = 270;//2700;//Long.parseLong(generalParameterRepository.getValueWhereName(GeneralParameterConstant.PORTAL_REFRESH_TOKEN_AGE));
+        long tokenExpired = 1800;//1800000;//Long.parseLong(generalParameterRepository.getValueWhereName(GeneralParameterConstant.PORTAL_TOKEN_EXPIRED));
+        long refreshTokenExpired = 1800;//1800000;//Long.parseLong(generalParameterRepository.getValueWhereName(GeneralParameterConstant.PORTAL_REFRESH_TOKEN_EXPIRED));
 
         String username = dataUser.get().getUsername();
         claimData.put("username", username);

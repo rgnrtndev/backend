@@ -26,7 +26,7 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
         Map<String, Object> error = new HashMap<>();
         error.put("status", HttpServletResponse.SC_UNAUTHORIZED);
         error.put("error", "Unauthorized");
-        error.put("message", "Session Has Expired");
+        error.put("message",  e.getMessage() != null ? e.getMessage() : "Unauthorized Access");
         return error;
     }
 

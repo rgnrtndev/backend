@@ -20,27 +20,29 @@
 //    public Optional<String> getChatRoomId(String senderId, String recipientId, boolean createNewRoomIfNotExists) {
 //        var sender = userRepository.findById(Long.valueOf(senderId));
 //        var recipient = userRepository.findById(Long.valueOf(recipientId));
-//        return chatRoomRepository
-//                .findBySenderIdAndRecipientId(sender.get().getNickName(), recipient.get().getNickName())
-//                .map(ChatRoom::getChatId)
-//                .or(() -> {
-//                    if(createNewRoomIfNotExists) {
-//                        var chatId = createChatId(senderId, recipientId);
-//                        return Optional.of(chatId);
-//                    }
+//        if(sender.isPresent() && recipient.isPresent()){
+//            var senderNickName = sender.get().getUsername();
+//            var recipientNickName = recipient.get().getUsername();
 //
-//                    return  Optional.empty();
-//                });
+//            var chatRoom = chatRoomRepository.findBySenderIdAndRecipientId(senderNickName, recipientNickName);
+//            if(chatRoom.isPresent()){
+//                return Optional.of(chatRoom.get().getChatId());
+//            }else if(createNewRoomIfNotExists){
+//                var chatId = createChatId(senderNickName, recipientNickName);
+//                return Optional.of(chatId);
+//            }
+//        }
+//        return Optional.empty();
 //    }
 //
-//    private String createChatId(String senderId, String recipientId) {
+//    private String createChatId(String senderName, Long senderId, String recipientName, Long recipientId) {
 //        var chatId = String.format("%s_%s", senderId, recipientId);
 //
 //        ChatRoom senderRecipient = ChatRoom
 //                .builder()
 //                .chatId(chatId)
 //                .senderId(senderId)
-//                .recipientId(recipientId)
+//                .recipientId(r)
 //                .build();
 //
 //        ChatRoom recipientSender = ChatRoom

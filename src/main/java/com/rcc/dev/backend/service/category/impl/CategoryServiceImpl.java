@@ -1,7 +1,6 @@
 package com.rcc.dev.backend.service.category.impl;
 
 import com.rcc.dev.backend.constant.ResponseCode;
-import com.rcc.dev.backend.constant.StatusResponse;
 import com.rcc.dev.backend.dto.category.CategoryRequest;
 import com.rcc.dev.backend.dto.response.RCCResponse;
 import com.rcc.dev.backend.model.Category;
