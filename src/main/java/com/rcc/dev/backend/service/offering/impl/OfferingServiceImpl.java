@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -26,6 +27,7 @@ public class OfferingServiceImpl implements OfferingService {
 
     private final OfferingRepository offeringRepository;
     private final OfferingCategoryRepository offeringCategoryRepository;
+    private final SimpMessagingTemplate messagingTemplate;
 
     @Override
     public ResponseEntity<RCCResponse<Object>> update(HttpServletRequest httpServletRequest, OfferingRequest offeringRequest) {
@@ -146,9 +148,14 @@ public class OfferingServiceImpl implements OfferingService {
                 totalAmount = totalAmount.add(offering.getAmount());
                 offeringResponse.add(response);
             }
+
             Map<String, Object> finalResponse = new HashMap<>();
             finalResponse.put("offerings", offeringResponse);
             finalResponse.put("totalAmount", totalAmount);
+
+            // Broadcast to WebSocket clients
+            messagingTemplate.convertAndSend("/topic/offering", finalResponse);
+
             return ResponseEntity.ok(ResponseUtil.response(
                     ResponseCode.SUCCESS_RESPONSE_CODE,
                     ResponseCode.CommonIdn.SUCCESS_GET_ALL_DATA,
@@ -162,5 +169,52 @@ public class OfferingServiceImpl implements OfferingService {
                     ResponseCode.CommonEng.ERROR
             ));
         }
+    }
+
+    @Override
+    public void sendOfferingChartUpdates() {
+        var offerings = offeringRepository.getOfferingChartPojo();
+
+        BigDecimal totalAmount = BigDecimal.ZERO;
+        List<Map<String, Object>> offeringResponse = new ArrayList<>();
+
+        for (var offering : offerings) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("sabbath", offering.getSabbathDate());
+            response.put("offeringName", offering.getOfferingName());
+            response.put("id", offering.getId());
+            response.put("amount", offering.getAmount());
+            totalAmount = totalAmount.add(offering.getAmount());
+            offeringResponse.add(response);
+        }
+
+        Map<String, Object> finalResponse = new HashMap<>();
+        finalResponse.put("offerings", offeringResponse);
+        finalResponse.put("totalAmount", totalAmount);
+
+        // Send the data to the topic "/user/offerings"
+        messagingTemplate.convertAndSend("/user/offerings", finalResponse);
+    }
+
+    @Override
+    public Map<String, Object> getOfferingChart() {
+        var offerings = offeringRepository.getOfferingChartPojo();
+        BigDecimal totalAmount = BigDecimal.ZERO;
+        List<Map<String, Object>> offeringResponse = new ArrayList<>();
+
+        for (var offering : offerings) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("sabbath", offering.getSabbathDate());
+            response.put("offeringName", offering.getOfferingName());
+            response.put("id", offering.getId());
+            response.put("amount", offering.getAmount());
+            totalAmount = totalAmount.add(offering.getAmount());
+            offeringResponse.add(response);
+        }
+
+        Map<String, Object> finalResponse = new HashMap<>();
+        finalResponse.put("offerings", offeringResponse);
+        finalResponse.put("totalAmount", totalAmount);
+        return finalResponse;
     }
 }
