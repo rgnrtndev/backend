@@ -8,6 +8,8 @@ import com.rcc.dev.backend.repository.GalleryRepository;
 import com.rcc.dev.backend.service.gallery.iservice.GalleryService;
 import com.rcc.dev.backend.util.ResponseUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,26 +22,26 @@ public class GalleryServiceImpl implements GalleryService {
     private final GalleryRepository galleryRepository;
 
     @Override
-    public RCCResponse<Object> findAll() {
+    public ResponseEntity<RCCResponse<Object>> findAll() {
         try {
             var galleries = galleryRepository.findAll();
-            return ResponseUtil.response(
+            return ResponseEntity.ok(ResponseUtil.response(
                     ResponseCode.SUCCESS_RESPONSE_CODE,
                     ResponseCode.CommonIdn.SUCCESS_GET_ALL_DATA,
                     ResponseCode.CommonEng.SUCCESS_GET_ALL_DATA,
                     galleries
-            );
+            ));
         }catch (Exception e){
-            return ResponseUtil.response(
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseUtil.response(
                     ResponseCode.ERROR_RESPONSE_CODE,
                     ResponseCode.CommonIdn.ERROR,
                     ResponseCode.CommonEng.ERROR
-            );
+            ));
         }
     }
 
     @Override
-    public RCCResponse<Object> save(GalleryRequest galleryRequest) {
+    public ResponseEntity<RCCResponse<Object>> save(GalleryRequest galleryRequest) {
         try{
             Gallery gallery;
             if(Objects.isNull(galleryRequest.getId()) || galleryRequest.getId().equals(0L)){
@@ -57,37 +59,37 @@ public class GalleryServiceImpl implements GalleryService {
                     .createdDate(gallery.getCreatedDate())
                     .build();
             Gallery savedGallery = galleryRepository.save(gallery);
-            return ResponseUtil.response(
+            return ResponseEntity.ok(ResponseUtil.response(
                     ResponseCode.SUCCESS_RESPONSE_CODE,
                     ResponseCode.CommonIdn.SUCCESS_SAVE_DATA,
                     ResponseCode.CommonEng.SUCCESS_SAVE_DATA,
                     savedGallery
-            );
+            ));
         }catch (Exception e){
-            return ResponseUtil.response(
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseUtil.response(
                     ResponseCode.ERROR_RESPONSE_CODE,
                     ResponseCode.CommonIdn.ERROR,
                     ResponseCode.CommonEng.ERROR
-            );
+            ));
         }
     }
 
     @Override
-    public RCCResponse<Object> detail(Long id) {
+    public ResponseEntity<RCCResponse<Object>> detail(Long id) {
         var galleryDetail = galleryRepository.findById(id);
         if(galleryDetail.isPresent()){
-            return ResponseUtil.response(
+            return ResponseEntity.ok(ResponseUtil.response(
                     ResponseCode.SUCCESS_RESPONSE_CODE,
                     ResponseCode.CommonIdn.SUCCESS_GET_DATA_DETAIL,
                     ResponseCode.CommonEng.SUCCESS_GET_DATA_DETAIL,
                     galleryDetail
-            );
+            ));
         }
-        return ResponseUtil.response(
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseUtil.response(
                 ResponseCode.SUCCESS_RESPONSE_CODE,
                 ResponseCode.CommonIdn.DATA_NOT_FOUND,
                 ResponseCode.CommonEng.DATA_NOT_FOUND,
                 galleryDetail
-        );
+        ));
     }
 }

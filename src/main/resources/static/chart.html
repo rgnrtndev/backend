@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Offering Chart</title>
+    <style>
+        #chart {
+            display: flex;
+            flex-wrap: wrap;
+            width: 80%;
+            margin: 20px auto;
+            text-align: center;
+        }
+        .bar {
+            width: 50px;
+            margin: 5px;
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<h1>Real-Time Offering Chart</h1>
+<div id="chart"></div>
+
+<!-- Add SockJS and STOMP scripts -->
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client"></script>
+<script src="https://cdn.jsdelivr.net/npm/stompjs"></script>
+
+<script>
+    // Create WebSocket connection using SockJS
+    const socket = new SockJS('/ws');  // /ws is the endpoint configured on server
+    const stompClient = Stomp.over(socket);
+
+    // Connect to the WebSocket server
+    stompClient.connect({}, function(frame) {
+        console.log('Connected: ' + frame);
+
+        // Subscribe to /topic/offering to receive updates
+        stompClient.subscribe('/topic/offering', function(messageOutput) {
+            const data = JSON.parse(messageOutput.body);
+            updateChart(data);  // Update the chart with the received data
+        });
+    });
+
+    // Function to update the chart dynamically with new data
+    function updateChart(data) {
+        const chart = document.getElementById('chart');
+        chart.innerHTML = '';  // Clear the existing chart
+
+        // Loop through the offerings data and create a bar for each
+        data.offerings.forEach(offering => {
+            const bar = document.createElement('div');
+            bar.className = 'bar';
+            bar.style.height = `${offering.amount / 1000}px`;  // Adjust the bar height based on the amount
+            bar.textContent = offering.offeringName;
+            chart.appendChild(bar);
+        });
+    }
+
+    // Optional: Send an initial request to the server for the chart data (if necessary)
+    function fetchChartData() {
+        stompClient.send("/app/chart", {}, JSON.stringify({}));
+    }
+
+    // Initial fetch of chart data
+    fetchChartData();
+</script>
+</body>
+</html>

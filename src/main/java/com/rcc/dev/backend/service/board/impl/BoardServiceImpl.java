@@ -97,8 +97,15 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public RCCResponse<Object> delete(Long id) {
         try {
-            Board board = boardRepository.findById(id).get();
-            boardRepository.delete(board);
+            var board = boardRepository.findById(id);
+            if(board.isEmpty()){
+                return ResponseUtil.response(
+                        ResponseCode.ERROR_RESPONSE_CODE,
+                        ResponseCode.CommonIdn.DATA_NOT_FOUND,
+                        ResponseCode.CommonEng.DATA_NOT_FOUND
+                );
+            }
+            boardRepository.delete(board.get());
             return ResponseUtil.response(
                     ResponseCode.ERROR_RESPONSE_CODE,
                     ResponseCode.CommonIdn.SUCCESS_DELETED_DATA,
